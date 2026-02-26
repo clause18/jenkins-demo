@@ -1,45 +1,29 @@
-pipeline {
-    agent any
-    
-    stages {
+node {
+    try {
         stage('Checkout') {
-            steps {
-                echo 'Cloning repository...'
-                git 'https://github.com/clause18/jenkins-demo.git'
-            }
+            echo 'Checking out code...'
+            git 'https://github.com/clause18/jenkins-demo.git'
         }
         
         stage('Build') {
-            steps {
-                echo 'Building the application...'
-                // For Python app
-                bat 'echo Building Python app...'
-            }
+            echo 'Building...'
+            bat 'echo Build stage completed'
         }
         
         stage('Test') {
-            steps {
-                echo 'Testing the application...'
-                // Run your test
-                bat 'python --version'
-            }
+            echo 'Testing...'
+            bat 'python hello.py'
         }
         
         stage('Deploy') {
-            steps {
-                echo 'Deploying application...'
-                // Simulate deployment
-                bat 'echo Application deployed successfully!'
-            }
+            echo 'Deploying...'
+            bat 'echo Application deployed'
         }
+        
+        echo 'Pipeline completed successfully!'
     }
-    
-    post {
-        success {
-            echo 'Pipeline completed successfully!'
-        }
-        failure {
-            echo 'Pipeline failed!'
-        }
+    catch (Exception e) {
+        echo "Pipeline failed: ${e.message}"
+        throw e
     }
 }
